@@ -1,0 +1,10 @@
+﻿@model double
+@{
+	int ceil = (int)Math.Ceiling(Model);
+}
+
+<span><i class="@(ceil >= 1 ? "fa fa-star text-warning" : "fa-regular fa-star")"></i></span>
+<span><i class="@(ceil >= 2 ? "fa fa-star text-warning" : "fa-regular fa-star")"></i></span>
+<span><i class="@(ceil >= 3 ? "fa fa-star text-warning" : "fa-regular fa-star")"></i></span>
+<span><i class="@(ceil >= 4 ? "fa fa-star text-warning" : "fa-regular fa-star")"></i></span>
+<span><i class="@(ceil == 5 ? "fa fa-star text-warning" : "fa-regular fa-star")"></i></span>

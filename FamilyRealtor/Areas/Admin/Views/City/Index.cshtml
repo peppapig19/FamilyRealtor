@@ -1,0 +1,80 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model List<City>
+@{
+	ViewData["Title"] = "Управление городами";
+
+	string? action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<div id="deleteModal" class="modal" tabindex="-1">
+	<div class="modal-dialog"></div>
+</div>
+
+<h1 class="pb-3">@ViewBag.Title</h1>
+<h5><a asp-action="Create">Добавить город</a></h5>
+
+<form asp-action="Search" class="mt-3 mb-3" method="get">
+	<div class="row row-cols-sm-auto align-items-baseline text-nowrap g-2">
+		<div class="col-12 d-flex gap-2">
+			<label for="sName" class="col-form-label">Название:</label>
+			<input id="sName" class="form-control" name="sName" value="@Context.Request.Query["sName"]" />
+		</div>
+		<div class="col-12 d-flex gap-2">
+			<label for="sCountry" class="col-form-label">Страна:</label>
+			<select id="sCountry" class="form-select" name="sCountry">
+				<option value="">Выбрать страну...</option>
+
+				@foreach (Country country in ViewBag.Countries)
+				{
+					<option value="@country.Id" selected="@(Context.Request.Query["sCountry"] == country.Id)">@country.Name</option>
+				}
+			</select>
+		</div>
+		<div>
+			<button class="btn btn-primary">Найти</button>
+			<a asp-action="Index" class="btn btn-secondary">Сброс</a>
+		</div>
+	</div>
+</form>
+
+@if (action == "Search")
+{
+	<h5>Результаты поиска</h5>
+}
+
+<div class="table-responsive">
+	<table class="table table-hover bg-white">
+		<thead class="table-dark">
+			<tr>
+				<th>ID</th>
+				<th>Название</th>
+				<th>Страна</th>
+				<th class="text-end"></th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (Model.Any())
+			{
+				@foreach (City city in Model)
+				{
+					<tr>
+						<td>@city.Id</td>
+						<td>@city.Name</td>
+						<td>@city.Country.Name</td>
+						<td class="text-end">
+							<a asp-action="Update" asp-route-id="@city.Id" class="btn"><i class="fa fa-pen"></i></a>
+							<a class="btn deleteButton" data-name="@city.Name"
+							   data-path="@Url.Action("Delete", "City", new { Area = "Admin", Id = city.Id })"><i class="fa fa-trash"></i></a>
+						</td>
+					</tr>
+				}
+			}
+			else
+			{
+				<tr><td colspan="4">Города не найдены.</td></tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@await Html.PartialAsync("_PaginationPartial")

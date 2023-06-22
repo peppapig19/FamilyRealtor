@@ -1,0 +1,68 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model Booking
+
+<div id="booking-card" class="card-body">
+	<form asp-controller="Booking" asp-action="Pay" id="booking-form" class="row g-3" method="post">
+		<input asp-for="RentalId" hidden />
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<input id="rental-id" value="@Model.Rental?.Id" hidden />
+		<input id="price" value="@Model.Rental?.PriceADay" hidden />
+		<input id="final-price" value="@Model.Rental?.FinalPriceADay" hidden />
+		<div class="d-flex d-lg-grid d-xl-flex flex-wrap gap-2">
+			<div class="col">
+				<label asp-for="CheckInDate"></label>
+				<div id="booking-datepicker-from" class="input-group date">
+					<input asp-for="CheckInDate" class="form-control" />
+					<span class="input-group-addon">
+						<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+					</span>
+				</div>
+			</div>
+			<div class="col">
+				<label asp-for="CheckOutDate"></label>
+				<div id="booking-datepicker-to" class="input-group date">
+					<input asp-for="CheckOutDate" class="form-control" />
+					<span class="input-group-addon">
+						<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+					</span>
+				</div>
+			</div>
+			<span asp-validation-for="CheckInDate" class="text-danger"></span>
+			<span asp-validation-for="CheckOutDate" class="text-danger"></span>
+		</div>
+		<div class="d-flex gap-1">
+			<div class="col-auto">
+				<label asp-for="Guests" class="col-form-label"></label>
+			</div>
+			<div class="col-auto col-lg">
+				<select asp-for="Guests" class="form-select">
+					<option value="">Выбрать...</option>
+					<option value="1">1 взрослый</option>
+
+					@for (int i = 2; i <= Model.Rental?.MaximumGuests; i++)
+					{
+						<option value="@i">@i взрослых</option>
+					}
+				</select>
+			</div>
+		</div>
+		<div>
+			<div class="d-flex justify-content-end align-items-baseline">
+				<h3 id="total-price">@Model.Rental?.FinalPriceADay <span>&#8381;</span>/день</h3>
+				@if (Model.Rental?.Discount != null && Model.Rental.Discount != 0)
+				{
+					<h6 id="old-total-price" class="text-decoration-line-through text-muted ms-2">@Model.Rental?.PriceADay <span>&#8381;</span></h6>
+				}
+			</div>
+			@if (Model.Rental?.Discount != null && Model.Rental.Discount != 0)
+			{
+				<div class="text-end">
+					<h6 class="text-success">Скидка @(Model.Rental?.Discount)%</h6>
+				</div>
+			}
+		</div>
+		<div class="d-grid">
+			<button class="btn btn-success">Забронировать</button>
+		</div>
+	</form>
+</div>

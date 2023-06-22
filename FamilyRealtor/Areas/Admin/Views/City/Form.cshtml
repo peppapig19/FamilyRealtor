@@ -1,0 +1,33 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model City
+@{
+	ViewData["Title"] = "Город";
+	bool isNew = Model == null;
+}
+
+<h1>@ViewBag.Title</h1>
+<form asp-action="@(isNew ? "Create" : "Update")" class="d-grid gap-3" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@if (!isNew)
+	{
+		<input asp-for="Id" hidden />
+	}
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="Name"></label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="CountryId">Страна:</label>
+			<select asp-for="CountryId" asp-items="ViewBag.CountryDropdown" class="form-select">
+				<option value="">Выбрать страну...</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-auto">
+			<button class="btn btn-success">@(isNew ? "Добавить" : "Изменить")</button>
+		</div>
+	</div>
+</form>

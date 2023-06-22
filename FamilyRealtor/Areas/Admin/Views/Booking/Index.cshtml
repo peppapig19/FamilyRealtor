@@ -1,0 +1,99 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model List<Booking>
+@{
+	ViewData["Title"] = "Управление бронированиями";
+
+	string? action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<div id="deleteModal" class="modal" tabindex="-1">
+	<div class="modal-dialog"></div>
+</div>
+
+<h1 class="pb-3">@ViewBag.Title</h1>
+<form asp-action="Report" method="get">
+	<div class="row row-cols-sm-auto align-items-baseline text-nowrap g-2">
+		<div class="col-12 d-flex gap-2">
+			<label for="reportDateFrom" class="col-form-label">Платежи за период:</label>
+			<div id="datepicker-from" class="input-group date">
+				<input id="reportDateFrom" class="form-control" name="reportDateFrom" />
+				<span class="input-group-addon">
+					<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+				</span>
+			</div>
+		</div>
+		<div class="col-12 d-flex gap-2">
+			<div id="datepicker-to" class="input-group date">
+				<input id="reportDateTo" class="form-control" name="reportDateTo" />
+				<span class="input-group-addon">
+					<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+				</span>
+			</div>
+		</div>
+		<button class="btn btn-link"><h5>Получить отчёт</h5></button>
+	</div>
+</form>
+
+<form asp-action="Search" class="mt-3 mb-3" method="get">
+	<div class="row row-cols-sm-auto align-items-baseline text-nowrap g-2">
+		<div class="col-12 d-flex gap-2">
+			<label for="sRental" class="col-form-label">ID объекта аренды:</label>
+			<input id="sRental" class="form-control" name="sRental" value="@Context.Request.Query["sRental"]" />
+		</div>
+		<div>
+			<button class="btn btn-primary">Найти</button>
+			<a asp-action="Index" class="btn btn-secondary">Сброс</a>
+		</div>
+	</div>
+</form>
+
+@if (action == "Search")
+{
+	<h5>Результаты поиска</h5>
+}
+
+<div class="table-responsive">
+	<table class="table table-hover bg-white">
+		<thead class="table-dark">
+			<tr>
+				<th>ID</th>
+				<th>Даты</th>
+				<th>Гостей</th>
+				<th>Итоговая цена</th>
+				<th>Номер платежа</th>
+				<th>Дата платежа</th>
+				<th>ID объекта</th>
+				<th>ID клиента</th>
+				<th class="text-end"></th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (Model.Any())
+			{
+				@foreach (Booking booking in Model)
+				{
+					<tr>
+						<td>@booking.Id</td>
+						<td>@(booking.CheckInDate) - @(booking.CheckOutDate) (@booking.Days дней)</td>
+						<td>@booking.Guests</td>
+						<td>@booking.TotalPrice <span>&#8381;</span></td>
+						<td>@booking.PaymentId</td>
+						<td>@booking.Paid</td>
+						<td>@booking.Rental?.Id</td>
+						<td>@booking.Client?.Id</td>
+						<td class="text-end">
+							<a class="btn deleteButton" data-name="@booking.Paid"
+							   data-path="@Url.Action("Delete", "Booking", new { Area = "Admin", Id = booking.Id })"><i class="fa fa-trash"></i></a>
+						</td>
+					</tr>
+				}
+			}
+			else
+			{
+				<tr><td colspan="8">Бронирования не найдены.</td></tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@await Html.PartialAsync("_PaginationPartial")

@@ -1,0 +1,45 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@using FamilyRealtor.Models.ViewModels;
+@model ReviewViewModel
+
+<h4>Отзывы</h4>
+@if (@Model.AllowUserComment)
+{
+	<form asp-controller="Review" asp-action="Comment" id="review-form" class="row g-2 mt-2 mb-4" method="post">
+		<input asp-for="RentalId" hidden />
+		<input asp-for="AllowUserComment" hidden />
+		<div id="star-rating">
+			<span class="star-element" data-rating="1"><i class="fa-regular fa-star"></i></span>
+			<span class="star-element" data-rating="2"><i class="fa-regular fa-star"></i></span>
+			<span class="star-element" data-rating="3"><i class="fa-regular fa-star"></i></span>
+			<span class="star-element" data-rating="4"><i class="fa-regular fa-star"></i></span>
+			<span class="star-element" data-rating="5"><i class="fa-regular fa-star"></i></span>
+			<input asp-for="Rating" hidden />
+		</div>
+		<div>
+			<textarea asp-for="Content" class="form-control" rows="3"></textarea>
+		</div>
+		<div>
+			<button class="btn btn-primary">Отправить</button>
+		</div>
+	</form>
+}
+
+@if (Model.Reviews?.Count > 0)
+{
+	@foreach (Review review in Model.Reviews)
+	{
+		<div>
+			<div class="d-flex justify-content-between">
+				<label class="fw-bold">@review.Client.FirstName</label>
+				<div>@await Html.PartialAsync("_StarsPartial", (double)review.Rating!.Value)</div>
+			</div>
+			<div class="text-break">@review.Content</div>
+		</div>
+		<hr />
+	}
+}
+else
+{
+	<label>Отзывов пока нет.</label>
+}

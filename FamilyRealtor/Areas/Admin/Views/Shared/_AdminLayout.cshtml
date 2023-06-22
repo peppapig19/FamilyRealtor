@@ -1,0 +1,48 @@
+﻿@using FamilyRealtor.Models.ViewModels;
+@using FamilyRealtor.Helpers;
+@{
+	Layout = "_Layout";
+
+	ViewContext viewContext = ViewContext;
+}
+
+<ul class="nav nav-tabs mt-2 mb-3">
+	<li class="nav-item">
+		<a asp-controller="Rental" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Rental")">Объекты</a>
+	</li>
+	<li class="nav-item">
+		<a asp-controller="Booking" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Booking")">Бронирования</a>
+	</li>
+	<li class="nav-item">
+		<a asp-controller="Review" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Review")">Отзывы</a>
+	</li>
+	<li class="nav-item">
+		<a asp-controller="Client" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Client")">Клиенты</a>
+	</li>
+	<li class="nav-item">
+		<a asp-controller="Country" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Country")">Страны</a>
+	</li>
+	<li class="nav-item">
+		<a asp-controller="City" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "City")">Города</a>
+	</li>
+
+	@if (User.IsInRole("администратор"))
+	{
+		<li class="nav-item">
+			<a asp-controller="Category" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Category")">Категории</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="Facility" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "Facility")">Удобства</a>
+		</li>
+		<li class="nav-item">
+			<a asp-controller="User" asp-action="Index" class="nav-link @Nav.Active(viewContext, area: "Admin", controller: "User")">Пользователи</a>
+		</li>
+	}
+</ul>
+
+@RenderBody()
+
+@section Scripts {
+	<script src="~/js/admin.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+}

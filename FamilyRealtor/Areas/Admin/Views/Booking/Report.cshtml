@@ -1,0 +1,46 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model List<Booking>
+@{
+	ViewData["Title"] = "Отчёт";
+}
+
+<h3 class="pb-3">Доход за @ViewBag.MinDate - @ViewBag.MaxDate</h3>
+<div class="table-responsive">
+	<table class="table table-hover bg-white">
+		<thead class="table-dark">
+			<tr>
+				<th>ID</th>
+				<th>Дата платежа</th>
+				<th>Даты бронирования</th>
+				<th class="text-end">Итоговая цена</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (Model.Any())
+			{
+				@foreach (Booking booking in Model)
+				{
+					<tr>
+						<td>@booking.Id</td>
+						<td>@booking.Paid</td>
+						<td>@(booking.CheckInDate) - @(booking.CheckOutDate) (@booking.Days дней)</td>
+						<td class="text-end">@booking.TotalPrice <span>&#8381;</span></td>
+					</tr>
+				}
+			}
+			else
+			{
+				<tr><td colspan="4">Бронирования не найдены.</td></tr>
+			}
+		</tbody>
+		<tfoot>
+			@if (Model.Any())
+			{
+				<tr class="table-info">
+					<td colspan="3"><b>Всего за период:</b></td>
+					<td class="text-end"><b>@ViewBag.Sum <span>&#8381;</span></b></td>
+				</tr>
+			}
+		</tfoot>
+	</table>
+</div>

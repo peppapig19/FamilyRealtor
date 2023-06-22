@@ -1,0 +1,120 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@using FamilyRealtor.Models.ViewModels;
+@model List<Rental>
+@{
+	ViewData["Title"] = "Главная";
+}
+
+<div id="filterModal" class="modal" tabindex="-1">
+	<div class="modal-dialog modal-lg"></div>
+</div>
+
+<div class="jumbotron jumbotron-fluid mb-4">
+	<form asp-action="Index" class="d-flex align-items-center bg-black bg-opacity-50 h-100" method="get">
+		<div class="container">
+			<div class="row text-white">
+				<h1 class="display-4">Доступная зарубежная аренда</h1>
+			</div>
+			<div class="row d-flex justify-content-center g-2 p-2 p-sm-0">
+				<div class="col-6 col-lg">
+					<select id="sCountry" class="form-select" name="sCountry">
+						<option value="">Выбрать страну...</option>
+
+						@foreach (Country country in ViewBag.Countries)
+						{
+							<option value="@country.Id" selected="@(Context.Request.Query["sCountry"] == country.Id)">@country.Name</option>
+						}
+					</select>
+				</div>
+				<div class="col-6 col-lg">
+					<select id="sCity" class="form-select" name="sCity">
+						<option value="">Выберите страну...</option>
+					</select>
+					<input id="requestCity" value="@Context.Request.Query["sCity"]" hidden />
+				</div>
+				<div class="col-6 col-lg-auto text-end">
+					<button id="filterButton" class="btn btn-outline-light" type="button"><i class="fa fa-filter"></i> Подобрать</button>
+				</div>
+				<div class="col-6 col-lg-auto">
+					<button class="btn btn-primary">Найти</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+@if (!string.IsNullOrEmpty(Context.Request.Query["sCountry"]))
+{
+	<h3>Результаты поиска</h3>
+}
+<div class="container d-grid gap-5 mt-5 mb-5">
+	@foreach (Rental rental in Model)
+	{
+		<div class="row">
+			<div class="container-fluid border rounded shadow bg-white">
+				<div class="row">
+					<div class="col-lg-4 p-0">
+						<div id="carouselComponent@(rental.Id)" class="carousel carousel-small slide">
+							@await Html.PartialAsync("_CarouselPartial", rental)
+						</div>
+					</div>
+
+					<div class="col d-lg-flex flex-lg-column p-3">
+						<div>
+							<h5 class="mb-2"><a asp-controller="Rental" asp-action="Details" asp-route-id="@rental.Id">@rental.Name</a></h5>
+							<div class="text-truncate text-muted mb-2">
+								<i class="fa fa-location-dot"></i> @(rental.City?.Country.Name), @(rental.City?.Name)
+							</div>
+							<div class="mb-2">
+								@await Html.PartialAsync("_StarsPartial", rental.AverageRating)
+								<a asp-action="Details" asp-route-id="@rental.Id" class="text-muted"> (отзывов: @rental.ReviewCount)</a>
+							</div>
+						</div>
+
+						<div class="d-block d-lg-flex justify-content-end h-100">
+							<div class="align-self-center me-4">
+								<div class="long-text text-center">@rental.Description</div>
+							</div>
+
+							<div class="align-self-end mt-2">
+								<div class="row d-lg-block text-nowrap justify-content-end align-items-baseline">
+									@if (rental.Discount.HasValue && rental.Discount != 0)
+									{
+										<div class="col-4 col-lg-12 d-flex justify-content-center align-items-baseline">
+											<h3>@rental.FinalPriceADay <span>&#8381;</span></h3>
+											<span>/день</span>
+										</div>
+										<div class="col-4 col-lg-12 d-flex justify-content-end">
+											<h6 class="text-decoration-line-through text-muted me-2">@rental.PriceADay <span>&#8381;</span></h6>
+											<h6 class="text-success">Скидка @(rental.Discount)%</h6>
+										</div>
+									}
+									else
+									{
+										<div class="d-flex justify-content-center align-items-baseline">
+											<h3>@rental.FinalPriceADay <span>&#8381;</span></h3>
+											<span>/день</span>
+										</div>
+									}
+								</div>
+								<div class="d-grid">
+									<a asp-controller="Rental" asp-action="Details" asp-route-id="@rental.Id" class="btn btn-primary">
+										<h5>Забронировать</h5>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+	@if (Model.Count == 0)
+	{
+		<label>Предложения не найдены.</label>
+	}
+</div>
+
+@if (ViewBag.PageCount > 1)
+	@await Html.PartialAsync("_PaginationPartial")

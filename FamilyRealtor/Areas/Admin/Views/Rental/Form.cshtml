@@ -1,0 +1,130 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model Rental
+@{
+	ViewData["Title"] = "Объект аренды";
+	bool isNew = Model == null;
+}
+
+<h1>@ViewBag.Title</h1>
+<form asp-action="@(isNew ? "Create" : "Update")" class="d-grid gap-3" method="post" enctype="multipart/form-data">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@if (!isNew)
+	{
+		<input asp-for="Id" hidden />
+	}
+	<div class="row">
+		<div class="col-12">
+			<label asp-for="Name"></label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="CategoryId"></label>
+			<select asp-for="CategoryId" asp-items="ViewBag.CategoryDropdown" class="form-select">
+				<option value="">Выбрать категорию...</option>
+			</select>
+			<span asp-validation-for="CategoryId" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="CountryId">Страна:</label>
+			<select asp-for="CountryId" asp-items="ViewBag.CountryDropdown" class="form-select">
+				<option value="">Выбрать страну...</option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="CityId"></label>
+			<select asp-for="CityId" class="form-select">
+				<option value="">Выберите страну...</option>
+			</select>
+			<input id="requestCity" value="@Model?.CityId" hidden />
+			<span asp-validation-for="CityId" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="Street"></label>
+			<input asp-for="Street" class="form-control" />
+			<span asp-validation-for="Street" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="House"></label>
+			<input asp-for="House" class="form-control" />
+			<span asp-validation-for="House" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="Apartment"></label>
+			<input asp-for="Apartment" class="form-control" />
+			<span asp-validation-for="Apartment" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<label asp-for="Description"></label>
+			<textarea asp-for="Description" class="form-control" rows="10"></textarea>
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
+		@foreach (Facility facility in ViewBag.Facilities)
+		{
+			<span>
+				<input id="@facility.Name" class="form-check-input" name="FacilityIds" value="@facility.Id"
+					   type="checkbox" @(Model?.Facilities?.Contains(facility) == true ? "checked" : "") />
+				<label for="@facility.Name" class="form-check-label">@facility.Name</label>
+			</span>
+		}
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="MaximumGuests"></label>
+			<input asp-for="MaximumGuests" class="form-control" />
+			<span asp-validation-for="MaximumGuests" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="PriceADay">Цена за сутки, <span>&#8381;</span></label>
+			<input asp-for="PriceADay" class="form-control" />
+			<span asp-validation-for="PriceADay" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="Discount"></label>
+			<input asp-for="Discount" class="form-control" />
+			<span asp-validation-for="Discount" class="text-danger"></span>
+		</div>
+		<div class="col-md-4">
+			<label asp-for="FinalPriceADay"></label>
+			<div id="final-price" class="form-control bg-transparent border-0 ps-0 pe-0">@Model?.FinalPriceADay <span>&#8381;</span></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="FormFiles"></label>
+			<input asp-for="FormFiles" type="file" class="form-control" multiple />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<div id="image-previews" class="d-flex flex-wrap gap-2 p-0">
+				@if (Model?.Photos?.Count > 0)
+					foreach (Photo photo in Model.Photos)
+					{
+						<img class="image-preview" src="~/Images/Rent/@(Model.Id)/@photo.Path" alt="@photo">
+					}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<input asp-for="IsVisible" class="form-check-input" />
+			<label asp-for="IsVisible" class="form-check-label"></label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-auto">
+			<button class="btn btn-success">@(isNew ? "Добавить" : "Изменить")</button>
+		</div>
+	</div>
+</form>

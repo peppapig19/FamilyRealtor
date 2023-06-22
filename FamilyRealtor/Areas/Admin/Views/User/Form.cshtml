@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using FamilyRealtor.Areas.Admin.Models.ViewModels;
+@model UserViewModel
+@{
+	ViewData["Title"] = "Пользователь";
+	bool isNew = Model == null;
+}
+
+<h1 class="pb-2">@ViewBag.Title</h1>
+<form asp-action="@(isNew ? "Create" : "Update")" class="d-grid gap-3" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@if (!isNew)
+	{
+		<input asp-for="Id" hidden />
+	}
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Email"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<input asp-for="Email" class="form-control" />
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Password"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<div class="input-group">
+				<input asp-for="Password" class="form-control">
+				<button id="passwordButton" class="btn btn-outline-secondary" type="button"><i class="fa fa-eye"></i></button>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Roles"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<div class="row row-cols-2 g-2">
+				@foreach (IdentityRole role in ViewBag.Roles)
+				{
+					<span>
+						<input id="@role.Id" class="form-check-input" name="Roles" value="@role.Name"
+							   type="checkbox" @(role.Name != null && Model?.Roles?.Contains(role.Name) == true ? "checked" : "") />
+						<label for="@role.Id" class="form-check-label">
+							@(role.Name != null ? char.ToUpper(role.Name.First()) + role.Name.Substring(1).ToLower() : "")
+						</label>
+					</span>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-auto">
+			<button class="btn btn-success">@(isNew ? "Добавить" : "Изменить")</button>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,89 @@
+﻿@using FamilyRealtor.Models.ViewModels;
+@model RegisterViewModel
+@{
+	ViewData["Title"] = "Регистрация";
+}
+
+<h1>@ViewBag.Title</h1>
+<form asp-action="Register" class="d-grid gap-3" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<h3>Данные для бронирования</h3>
+	<div class="row">
+		<div class="col-sm-4">
+			<label asp-for="LastName"></label>
+			<input asp-for="LastName" class="form-control" />
+			<span asp-validation-for="LastName" class="text-danger"></span>
+		</div>
+		<div class="col-sm-4">
+			<label asp-for="FirstName"></label>
+			<input asp-for="FirstName" class="form-control" />
+			<span asp-validation-for="FirstName" class="text-danger"></span>
+		</div>
+		<div class="col-sm-4">
+			<label asp-for="Patronymic"></label>
+			<input asp-for="Patronymic" class="form-control" />
+			<span asp-validation-for="Patronymic" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<label asp-for="DOB"></label>
+			<div id="DOB-datepicker" class="input-group date">
+				<input asp-for="DOB" type="text" class="form-control" />
+				<span class="input-group-append">
+					<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+				</span>
+			</div>
+			<span asp-validation-for="DOB" class="text-danger"></span>
+		</div>
+		<div class="col-sm-4">
+			<label asp-for="Phone"></label>
+			<input asp-for="Phone" class="form-control" placeholder="+79000000000" />
+			<span asp-validation-for="Phone" class="text-danger"></span>
+		</div>
+	</div>
+
+	<h3>Данные для входа</h3>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Email"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<input asp-for="Email" class="form-control" />
+		</div>
+		<div class="col">
+			<span asp-validation-for="Email" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Password"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<input asp-for="Password" type="password" class="form-control" />
+		</div>
+		<div class="col">
+			<span asp-validation-for="Password" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="ConfirmPassword"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<input asp-for="ConfirmPassword" type="password" class="form-control" />
+		</div>
+		<div class="col">
+			<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="offset-sm-6 offset-md-3">
+			<button class="btn btn-primary">Зарегистрироваться</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="offset-sm-6 offset-md-3">Уже зарегистрированы? <a asp-action="Login">Войти</a></div>
+	</div>
+</form>

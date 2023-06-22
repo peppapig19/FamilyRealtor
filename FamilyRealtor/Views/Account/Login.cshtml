@@ -1,0 +1,49 @@
+﻿@using FamilyRealtor.Models.ViewModels;
+@model LoginViewModel
+@{
+	ViewData["Title"] = "Вход";
+}
+
+<h1 class="pb-2">@ViewBag.Title</h1>
+<form asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" class="d-grid gap-3" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Email"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<input asp-for="Email" class="form-control" />
+		</div>
+		<div class="col">
+			<span asp-validation-for="Email" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-md-3">
+			<label asp-for="Password"></label>
+		</div>
+		<div class="col-sm-6 col-lg-4">
+			<div class="input-group">
+				<input asp-for="Password" type="password" class="form-control">
+				<button id="passwordButton" class="btn btn-outline-secondary" type="button"><i class="fa fa-eye"></i></button>
+			</div>
+		</div>
+		<div class="col">
+			<span asp-validation-for="Password" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="offset-sm-6 offset-md-3 col-sm-6 col-lg-4">
+			<input asp-for="RememberMe" class="form-check-input" />
+			<label asp-for="RememberMe" class="form-check-label"></label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="offset-sm-6 offset-md-3">
+			<button class="btn btn-primary">Войти</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="offset-sm-6 offset-md-3">Не зарегистрированы? <a asp-action="Register">Зарегистрироваться</a></div>
+	</div>
+</form>

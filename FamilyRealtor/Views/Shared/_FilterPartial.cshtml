@@ -1,0 +1,118 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@using FamilyRealtor.Models.ViewModels;
+@model FilterViewModel
+
+<div class="modal-content">
+	<form asp-controller="Home" asp-action="Index" id="filterForm" method="post">
+		<div class="modal-header">
+			<h5 class="modal-title">Подобрать предложение</h5>
+			<button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+		</div>
+		<div class="modal-body d-grid gap-3">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+			<div class="row">
+				<div class="col">
+					<select asp-for="CountryId" asp-items="ViewBag.CountryDropdown" class="form-select">
+						<option value="">Выбрать страну...</option>
+					</select>
+					<span asp-validation-for="CountryId" class="text-danger"></span>
+				</div>
+				<div class="col">
+					<select asp-for="CityId" class="form-select">
+						<option value="">Выберите страну...</option>
+					</select>
+					<input id="requestCity" value="@Model?.CityId" hidden />
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<label asp-for="CheckInDate"></label>
+					<div id="filter-datepicker-from" class="input-group date">
+						<input asp-for="CheckInDate" class="form-control" />
+						<span class="input-group-addon">
+							<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+						</span>
+					</div>
+					<span asp-validation-for="CheckInDate" class="text-danger"></span>
+				</div>
+				<div class="col">
+					<label asp-for="CheckOutDate"></label>
+					<div id="filter-datepicker-to" class="input-group date">
+						<input asp-for="CheckOutDate" class="form-control" />
+						<span class="input-group-addon">
+							<span class="input-group-text d-block bg-light"><i class="fa fa-calendar"></i></span>
+						</span>
+					</div>
+					<span asp-validation-for="CheckOutDate" class="text-danger"></span>
+				</div>
+			</div>
+
+			<div class="row">
+				<label asp-for="CategoryIds"></label>
+			</div>
+			<div class="row row-cols-md-2 row-cols-lg-3 g-2">
+				@foreach (Category category in ViewBag.Categories)
+				{
+					<span>
+						<input id="@category.Name" class="form-check-input" name="CategoryIds" value="@category.Id"
+							   type="checkbox" @(Model?.CategoryIds?.Contains((int)category.Id) == true ? "checked" : "") />
+						<label for="@category.Name" class="form-check-label">@category.Name</label>
+					</span>
+				}
+			</div>
+
+			<div class="row">
+				<label asp-for="FacilityIds"></label>
+			</div>
+			<div class="row row-cols-2 row-cols-lg-3 g-2">
+				@foreach (Facility facility in ViewBag.Facilities)
+				{
+					<span>
+						<input id="@facility.Name" class="form-check-input" name="FacilityIds" value="@facility.Id"
+							   type="checkbox" @(Model?.FacilityIds?.Contains((int)facility.Id) == true ? "checked" : "") />
+						<label for="@facility.Name" class="form-check-label">@facility.Name</label>
+					</span>
+				}
+			</div>
+
+			<div class="row">
+				<div class="col col-lg-4">
+					<label asp-for="MinPriceADay"></label>
+					<input asp-for="MinPriceADay" class="form-control" />
+					<span asp-validation-for="MinPriceADay" class="text-danger"></span>
+				</div>
+				<div class="col col-lg-4">
+					<label asp-for="MaxPriceADay"></label>
+					<input asp-for="MaxPriceADay" class="form-control" />
+					<span asp-validation-for="MaxPriceADay" class="text-danger"></span>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-auto">
+					<label asp-for="Guests" class="col-form-label"></label>
+				</div>
+				<div class="col-6 col-lg-4">
+					<select asp-for="Guests" class="form-select">
+						<option value="">Выбрать...</option>
+						<option value="1">1 взрослый</option>
+
+						@for (int i = 2; i <= 10; i++)
+						{
+							<option value="@i">@i взрослых</option>
+						}
+					</select>
+				</div>
+				<div class="col-auto">
+					<span asp-validation-for="Guests" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Закрыть</button>
+			<button class="btn btn-primary">Применить</button>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,123 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using FamilyRealtor.Models
+@using FamilyRealtor.Models.ViewModels;
+@using FamilyRealtor.Helpers;
+@inject UserManager<User> userMngr
+@inject SignInManager<User> signInMngr
+@{
+	User? user = null;
+	if (signInMngr.IsSignedIn(User)) user = await userMngr.GetUserAsync(User);
+
+	ViewContext viewContext = ViewContext;
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewBag.Title - Семейный риэлтор</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" />
+	<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/FamilyRealtor.styles.css" asp-append-version="true" />
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-md navbar-light border-bottom box-shadow bg-white">
+			<div class="container-fluid">
+				<a asp-controller="Home" asp-action="Index" class="navbar-brand">
+					<img src="~/Images/logo.png" height="30" alt="Семейный Риэлтор">
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1">
+						<li class="nav-item">
+							<a asp-area="" asp-controller="Home" asp-action="Index"
+							class="nav-link @Nav.Active(viewContext, controller: "Home", action: "Index")">Предложения</a>
+						</li>
+						<li class="nav-item">
+							<a asp-area="" asp-controller="Home" asp-action="About"
+							class="nav-link @Nav.Active(viewContext, controller: "Home", action: "About")">О компании</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav">
+						@if (user != null)
+						{
+							if (User.IsInRole("администратор") || User.IsInRole("риэлтор"))
+							{
+								<li class="nav-item">
+									<a asp-area="Admin" asp-controller="Home" asp-action="Index" class="nav-link @Nav.ActiveArea(viewContext, "Admin")">
+										<i class="fa fa-gear"></i> Управление
+									</a>
+								</li>
+							}
+							else
+							{
+								<li class="nav-item">
+									<a asp-area="" asp-controller="Booking" asp-action="MyBookings"
+									class="nav-link @Nav.Active(viewContext, controller: "Booking", action: "MyBookings")">
+										<i class="fa fa-house-user"></i> Мои бронирования
+									</a>
+								</li>
+							}
+
+							<li class="nav-item">
+								<form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+									<button class="btn btn-outline-dark" type="submit">Выход</button>
+								</form>
+							</li>
+
+							if (User.IsInRole("администратор") || User.IsInRole("риэлтор"))
+							{
+								<li class="nav-item"><a class="nav-link">@user.Email</a></li>
+							}
+							else
+							{
+								<li class="nav-item">
+									<a asp-area="" asp-controller="Account" asp-action="Index" class="nav-link">@user.Email</a>
+								</li>
+							}
+						}
+						else
+						{
+							<li class="nav-item">
+								<a asp-area="" asp-controller="Account" asp-action="Register"
+								class="nav-link @Nav.Active(viewContext, controller: "Account", action: "Register")">Регистрация</a>
+							</li>
+							<li class="nav-item">
+								<a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-outline-dark">Вход</a>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<div class="container">
+		<main class="pb-3 mt-3" role="main">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">&copy; 2023 - Семейный риэлтор - <a asp-controller="Home" asp-action="About">О компании</a></div>
+	</footer>
+	<script src="~/lib/jquery/jquery.min.js"></script>
+	<script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+	<script src="~/lib/bootstrap-datepicker/locales/bootstrap-datepicker.ru.min.js"></script>
+	<script src="https://sdk.virtualearth.net/api/maps/mapcontrol?callback=GetMap&key=MY_API_KEY" async defer></script>
+	<script src="~/js/validation.js" asp-append-version="true"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/datepickers.js" asp-append-version="true"></script>
+	<script src="~/js/filter.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,17 @@
+﻿@model string
+
+<div class="modal-content">
+	<form id="deleteForm" method="post">
+		<div class="modal-header">
+			<h5 class="modal-title">Подтвердите удаление</h5>
+			<button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+		</div>
+		<div class="modal-body">
+			<p>Удалить "@Model"?</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Отмена</button>
+			<button class="btn btn-danger">Удалить</button>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,27 @@
+﻿@using FamilyRealtor.Models.DomainModels;
+@model Category
+@{
+	ViewData["Title"] = "Категория";
+	bool isNew = Model == null;
+}
+
+<h1>@ViewBag.Title</h1>
+<form asp-action="@(isNew ? "Create" : "Update")" class="d-grid gap-3" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@if (!isNew)
+	{
+		<input asp-for="Id" hidden />
+	}
+	<div class="row">
+		<div class="col-md-4">
+			<label asp-for="Name"></label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-auto">
+			<button class="btn btn-success">@(isNew ? "Добавить" : "Изменить")</button>
+		</div>
+	</div>
+</form>

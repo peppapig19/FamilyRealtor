@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+@{
+	Dictionary<string, StringValues> queryValues = QueryHelpers.ParseQuery(Context.Request.QueryString.Value);
+	queryValues.Remove("page");
+	string url = QueryHelpers.AddQueryString(Context.Request.Path, queryValues);
+
+	int page = Int32.TryParse(Context.Request.Query["page"], out int val) ? val : 1;
+}
+
+<ul class="pagination justify-content-center">
+	<li class="page-item @(page == 1 ? "disabled" : "")">
+		<a class="page-link" href="@QueryHelpers.AddQueryString(url, "page", (page - 1).ToString())">Предыдущая</a>
+	</li>
+
+	<li class="page-item @(page == 1 ? "active" : "")"><a class="page-link" href="@url">1</a></li>
+
+	@for (int i = 2; i <= ViewBag.PageCount; i++)
+	{
+		<li class="page-item @(i == page ? "active" : "")"><a class="page-link" href="@QueryHelpers.AddQueryString(url, "page", i.ToString())">@i</a></li>
+	}
+
+	<li class="page-item @(page >= ViewBag.PageCount ? "disabled" : "")">
+		<a class="page-link" href="@QueryHelpers.AddQueryString(url, "page", (page + 1).ToString())">Следующая</a>
+	</li>
+</ul>
